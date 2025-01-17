@@ -101,7 +101,7 @@ const generateInvoice = (
           doc.lastAutoTable.finalY + 30
         );
         doc.text(
-          `Total: $${invoiceData.actualTotal}`,
+          `Total: $${invoiceData.total}`,
           10,
           doc.lastAutoTable.finalY + 40
         );
