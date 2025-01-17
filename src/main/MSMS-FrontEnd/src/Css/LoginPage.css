@@ -1,0 +1,90 @@
+/* components/LoginPage.css */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+  font-family: Arial, sans-serif;
+  background-image: url(../assets/medical-background.jpg);
+  background-size: cover;
+  background-position: center;
+  /* filter: blur(4px); */
+}
+.login-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5); /* Slight white overlay */
+  backdrop-filter: blur(3px); /* Blur effect */
+  z-index: 1;
+}
+
+.login-container {
+  width: 300px;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.login-container h2 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+}
+
+.login-container input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.login-container button:hover {
+  background-color: #0056b3;
+}
+
+.login-container button:active {
+  transform: scale(0.98);
+}
+
+.login-container .forgot-password {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #007bff;
+  text-decoration: none;
+  display: block;
+}
+
+.login-container .forgot-password:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

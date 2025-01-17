@@ -1,0 +1,150 @@
+/* components/Invoice.css */
+.invoice-container {
+  max-width: 1250px;
+  padding-left: 20px;
+  font-family: "Arial", sans-serif;
+  background-color: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  color: #333;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-size: 2em;
+}
+
+h2,
+h3 {
+  color: #2c3e50;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  font-size: 0.95em;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #3498db;
+  box-shadow: 0 3px 8px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.company-info,
+.customer-info,
+.invoice-details {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.item-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  table-layout: fixed;
+}
+
+.item-table th,
+.item-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95em;
+}
+
+.item-table th {
+  background-color: #3498db;
+  color: #fff;
+  font-weight: 600;
+}
+
+.item-table td input {
+  width: 100%;
+  border: none;
+  padding: 8px;
+  background-color: transparent;
+  font-size: 0.9em;
+}
+
+.item-table td input:focus {
+  outline: none;
+}
+
+.summary {
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.summary-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.summary-field input {
+  max-width: 140px;
+  padding: 8px;
+  text-align: right;
+  border: 1px solid #d1d9e6;
+  border-radius: 6px;
+  background-color: #f9fafc;
+  box-sizing: border-box;
+  font-size: 0.95em;
+}
+
+button.submit-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin-top: 30px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #fff;
+  background-color: #3498db;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.submit-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+button.submit-button:active {
+  background-color: #1e6aa3;
+  transform: translateY(0);
+}

@@ -1,0 +1,92 @@
+/* components/Inventory.css */
+.inventory-container {
+  padding-left: 40px;
+}
+
+/* .inventory{
+    margin-left: 260px;
+} */
+
+.inventory h1 {
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+  /* width: 100%; */
+}
+
+.search-bar input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.buttons {
+  display: flex;
+  margin-bottom: 20px;
+  justify-content: space-evenly;
+}
+
+.buttons button {
+  width: 100%;
+  padding: 10px 15px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1abc9c;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttons button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.buttons button:hover:not(:disabled) {
+  background-color: #16a085;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ccc;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #c0392b;
+}

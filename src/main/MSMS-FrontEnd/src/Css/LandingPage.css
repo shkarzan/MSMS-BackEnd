@@ -1,0 +1,64 @@
+/* components/LandingPage.css */
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  color: #333;
+  background-image: url(../assets/medical-background.jpg); /* Update this path */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+.landing-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5); /* Slight white overlay */
+  backdrop-filter: blur(3px); /* Blur effect */
+  z-index: 1;
+}
+
+.logo, h1, .login-button {
+    position: relative;
+    z-index: 2; /* Ensure content is above the blurred background */
+}
+
+.logo {
+  width: 150px;
+  height: 150px;
+  /* margin-bottom: 10px; */
+  background-image: url(../assets/medical-logo.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* background-color: #007bff; */
+}
+
+h1 {
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.login-button {
+  width: 10%;
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
