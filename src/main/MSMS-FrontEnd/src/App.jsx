@@ -26,6 +26,7 @@ import Unauthorized from "./components/Unauthorized";
 import AdminDashboard from "./components/AdminDashboard";
 import StaffDashboard from "./components/StaffDashboard";
 import Dashboard from "./components/Dashboard";
+import SendEmailManually from "./components/SendEmailManually";
 
 function App() {
   const authenticated =
@@ -83,6 +84,10 @@ function App() {
                 <Route path="/updateMedicine" element={<UpdateMedicine />} />
                 <Route path="/addInvoice" element={<AddInvoice />} />
                 <Route path="/sales" element={<Sales />} />
+                <Route
+                  path="/sendManualEmail"
+                  element={<SendEmailManually />}
+                />
               </Route>
             </Route>
             <Route

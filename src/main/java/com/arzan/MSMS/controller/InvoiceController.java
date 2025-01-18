@@ -53,7 +53,6 @@ public class InvoiceController {
 
     @PostMapping("/sendEmailBySalesId/{salesId}")
     ResponseEntity<String> sendPdfToEmailBySalesId(@PathVariable Long salesId, @RequestParam("email") String email) throws MessagingException {
-//        return ResponseEntity.ok().body(""+invoiceRepo.findBySalesId(salesId));
         if(invoiceRepo.existsById(salesId)){
             Optional<Invoice> invoice = invoiceRepo.findById(salesId);
             if(invoice.isPresent()) {
@@ -64,7 +63,9 @@ public class InvoiceController {
                 } catch (Exception e) {
                     return ResponseEntity.status(404).body("No Invoice Found");
                 }
-
+            }
+            else{
+                return ResponseEntity.status(404).body("Sales Id Not found");
             }
 
         }

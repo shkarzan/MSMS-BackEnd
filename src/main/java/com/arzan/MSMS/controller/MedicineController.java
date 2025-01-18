@@ -33,7 +33,7 @@ public class MedicineController {
         return inventoryRepo.save(inventory);
     }
 
-    @PutMapping("/update/{medCode}/{quantity}")
+    @PutMapping("/update/{medCode}")
     Medicine updateMed(@RequestBody Medicine medicine,@PathVariable String medCode) {
         return inventoryRepo.findById(medCode)
                 .map(med -> {

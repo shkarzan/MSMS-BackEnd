@@ -51,6 +51,15 @@ const Invoices = () => {
     return invoice.salesId.toString().includes(searchTerm);
   });
 
+  const deletePdf = async (salesId)=>{
+      await axios.delete(`${url}/delete/${salesId}`)
+      .then(res=>{
+          NotificationManager.success(res.data);
+          loadAllInvoices();
+      })
+      .catch(err=>{
+          console.log(err)})
+      }
   return (
     <div className="sales">
       {/* <Sidebar logout={logout} name={name} isAdmin={isAdmin} /> */}
@@ -69,6 +78,7 @@ const Invoices = () => {
             <th>Sales Id</th>
             <th>Customer Id</th>
             <th>Invoice Pdf</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -84,7 +94,9 @@ const Invoices = () => {
                   View Bill
                 </a>
               </td>
+              <td><button onClick={()=> deletePdf(invoice.salesId)}>Delete</button></td>
             </tr>
+
           ))}
         </tbody>
       </table>

@@ -91,12 +91,12 @@ const generateInvoice = (
           doc.lastAutoTable.finalY + 10
         );
         doc.text(
-          `Tax Amount: $${invoiceData.taxAmount}`,
+          `Tax Amount: $${invoiceData.taxAmount.toFixed(2)}`,
           10,
           doc.lastAutoTable.finalY + 20
         );
         doc.text(
-          `Discount Amount: $${invoiceData.discountAmount}`,
+          `Discount Amount: $${invoiceData.discountAmount.toFixed(2)}`,
           10,
           doc.lastAutoTable.finalY + 30
         );

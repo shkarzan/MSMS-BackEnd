@@ -39,6 +39,9 @@ const StaffSidebar = ({ logout, isAdmin }) => {
             Settings
           </NavLink>
         )}
+        <NavLink to="/sendManualEmail" activeclassname="active">
+          Send PDF Manually
+        </NavLink>
       </nav>
       <div className="sidebar-footer">
         <p>{isAdmin ? "Admin" : "Staff"}</p>

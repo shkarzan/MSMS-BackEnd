@@ -60,9 +60,8 @@ export default function UpdateMedicine() {
 
   return (
     <div className="form-container">
-      <form onSubmit={handleSubmit} className="enhanced-form">
+      <form onSubmit={(e) => handleSubmit(e)} className="enhanced-form">
         <h2 className="form-heading">Update Form</h2>
-
         <label>
           Medicine Code
           <input
