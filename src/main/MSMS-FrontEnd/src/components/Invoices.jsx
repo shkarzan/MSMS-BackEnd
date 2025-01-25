@@ -35,7 +35,6 @@ const Invoices = () => {
     await axios
       .get(`${url}/all`)
       .then((res) => {
-        console.log(res.data);
         setInvoices(res.data);
       })
       .catch((err) => {
@@ -51,15 +50,17 @@ const Invoices = () => {
     return invoice.salesId.toString().includes(searchTerm);
   });
 
-  const deletePdf = async (salesId)=>{
-      await axios.delete(`${url}/delete/${salesId}`)
-      .then(res=>{
-          NotificationManager.success(res.data);
-          loadAllInvoices();
+  const deletePdf = async (salesId, customerId) => {
+    await axios
+      .delete(`${url}/delete/${salesId}/${customerId}`)
+      .then((res) => {
+        NotificationManager.success(res.data);
+        loadAllInvoices();
       })
-      .catch(err=>{
-          console.log(err)})
-      }
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className="sales">
       {/* <Sidebar logout={logout} name={name} isAdmin={isAdmin} /> */}
@@ -94,9 +95,14 @@ const Invoices = () => {
                   View Bill
                 </a>
               </td>
-              <td><button onClick={()=> deletePdf(invoice.salesId)}>Delete</button></td>
+              <td>
+                <button
+                  onClick={() => deletePdf(invoice.salesId, invoice.customerId)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
-
           ))}
         </tbody>
       </table>

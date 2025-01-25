@@ -23,10 +23,11 @@ export default function SendEmailManually() {
     await axios
       .post(`${url}/sendEmailBySalesId/${data.salesId}`, formData)
       .then((res) => {
-        NotificationManager.succes(res.data);
+        NotificationManager.success(res.data);
       })
       .catch((err) => {
-        NotificationManager.error(err.response.data);
+        console.log(err);
+        // NotificationManager.error(err.response.data);
       });
   };
 

@@ -1,19 +1,19 @@
 let CardData = [
     {
-        title: "Total Cases",
-        data: "1,000,000"
+        title: "Total Sales",
+        data: "10"
     },
     {
-        title: "Total Recovered",
-        data: "1,000,000"
+        title: "Total Customer Added",
+        data: "10"
     },
     {
-        title: "Total Deaths",
-        data: "1,000,000"
+        title: "Total Invoices sent",
+        data: "10"
     },
     {
-        title: "Total Active",
-        data: "1,000,000"
+        title:"Total xyz",
+        data:10
     }
 ];
 

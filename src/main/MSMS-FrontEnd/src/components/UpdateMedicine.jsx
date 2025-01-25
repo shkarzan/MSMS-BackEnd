@@ -49,6 +49,13 @@ export default function UpdateMedicine() {
       .put(`${url}/update/${med.medCode}`, med)
       .then(() => {
         NotificationManager.success("Updated Successfully");
+        setMedData({
+          medCode: "",
+          medName: "",
+          quantity: 0,
+          price: 0,
+          expiryDate: "",
+        });
         setFound(false);
       })
       .catch((err) => {

@@ -1,10 +1,10 @@
 // components/Inventory.js
 import React, { useEffect, useState } from "react";
 import "../Css/Inventory.css";
-import Sidebar from "./StaffSidebar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
+import CommonTable from "./CommonTable";
 
 const Inventory = () => {
   const navigate = useNavigate();
@@ -15,7 +15,6 @@ const Inventory = () => {
     await axios
       .get(`${url}/all`)
       .then((res) => {
-        console.log(res.data);
         setMed(res.data);
       })
       .catch((err) => {
@@ -59,32 +58,19 @@ const Inventory = () => {
             Update Medicine
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Medicine Code</th>
-              <th>Medicine Name</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Expiry Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredMeds.map((med, index) => (
-              <tr key={index}>
-                <td>{med.medCode}</td>
-                <td>{med.medName}</td>
-                <td>{med.quantity}</td>
-                <td>{med.price}</td>
-                <td>{med.expiryDate}</td>
-                <td>
-                  <button onClick={() => removeMed(med.medCode)}>Remove</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <CommonTable
+          tableHeader={[
+            "Medicine Code",
+            "Medicine Name",
+            "Quantity",
+            "Price",
+            "Expiry Date",
+            "Action",
+          ]}
+          aob={filteredMeds}
+          removeFun={removeMed}
+          data={"inventory"}
+        />
       </div>
     </div>
   );

@@ -11,15 +11,9 @@ const generateInvoice = (
   totals,
   date,
   invoiceData,
-  customerId,
+  cId,
   salesId
 ) => {
-  const meds = {
-    medCode: medList,
-    quantity: quantities,
-  };
-
-  console.log(meds);
   const doc = new jsPDF();
   // // Add Company Logo
   const logoUrl = "https://i.imgur.com/GOgB6Zu.png";
@@ -75,8 +69,8 @@ const generateInvoice = (
         const tableRows = medList.map((item, index) => [
           item.medName,
           quantities[index],
-          `$${item.price.toFixed(2)}`,
-          `$${totals[index].toFixed(2)}`,
+          `Rs.${item.price.toFixed(2)}`,
+          `Rs.${totals[index].toFixed(2)}`,
         ]);
 
         doc.autoTable({
@@ -86,29 +80,32 @@ const generateInvoice = (
         });
 
         doc.text(
-          `Sub Total : $${invoiceData.subTotal}`,
+          `Sub Total : Rs.${invoiceData.subTotal}`,
           10,
           doc.lastAutoTable.finalY + 10
         );
         doc.text(
-          `Tax Amount: $${invoiceData.taxAmount.toFixed(2)}`,
+          `Tax Amount: Rs.${invoiceData.taxAmount.toFixed(2)}`,
           10,
           doc.lastAutoTable.finalY + 20
         );
         doc.text(
-          `Discount Amount: $${invoiceData.discountAmount.toFixed(2)}`,
+          `Discount Amount: Rs.${invoiceData.discountAmount.toFixed(2)}`,
           10,
           doc.lastAutoTable.finalY + 30
         );
         doc.text(
-          `Total: $${invoiceData.total}`,
+          `Total: Rs.${invoiceData.total.toFixed(2)}`,
           10,
           doc.lastAutoTable.finalY + 40
         );
         const pdfBlob = doc.output("blob");
         sendEmail(pdfBlob, customer.email);
         setTimeout(() => {
-          uploadInvoice(salesId, customerId, pdfBlob);
+          uploadInvoice(salesId, cId, pdfBlob);
+          setTimeout(() => {
+            handleInventoryUpdate(quantities, medList);
+          }, 1000);
         }, 1000);
       };
       reader.readAsDataURL(blob);
@@ -160,6 +157,25 @@ const sendEmail = async (pdfBlob, customerEmail) => {
     .catch((err) => {
       console.error("Error sending email:", err);
       NotificationManager.error("Failed to send the invoice");
+    });
+};
+
+const handleInventoryUpdate = async (quantities, medList) => {
+  const medCodes = [];
+  medList.map((val) => {
+    medCodes.push(val.medCode);
+  });
+  const med = {
+    medCodes: medCodes,
+    quantities: quantities,
+  };
+  await axios
+    .put("http://localhost:8080/api/medicine/updateInventory", med)
+    .then((res) => {
+      NotificationManager.success(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 

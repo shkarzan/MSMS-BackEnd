@@ -4,31 +4,26 @@ import { Navigate, NavLink } from "react-router-dom";
 import "../Css/Sidebar.css";
 // import logo from "../Assets/medical-logo.jpg"; // Ensure you have a logo image in the specified path
 
-const StaffSidebar = ({ logout, isAdmin }) => {
+const StaffSidebar = ({ logout, isAdmin, count }) => {
   return (
     <div className="sidebar">
       <div className="sidebar-logo"></div>
       <h2>Medical Store</h2>
       <nav>
-        {isAdmin && (
-          <NavLink to="/dashboard" activeclassname="active">
-            Dashboard
-          </NavLink>
-        )}
         <NavLink to="/inventory" activeclassname="active">
-          Inventory
+          Inventory Management
         </NavLink>
         <NavLink to="/sales" activeclassname="active">
-          Sales
+          Sales Management
         </NavLink>
         {isAdmin && (
           <NavLink to="/customers" activeclassname="active">
-            Customers
+            Customer Management
           </NavLink>
         )}
         {isAdmin && (
           <NavLink to="/invoices" activeclassname="active">
-            Invoices
+            Invoice Management
           </NavLink>
         )}
         <NavLink to="/addInvoice" activeclassname="active">
@@ -36,11 +31,14 @@ const StaffSidebar = ({ logout, isAdmin }) => {
         </NavLink>
         {isAdmin && (
           <NavLink to="/settings" activeclassname="active">
-            Settings
+            System User Management
           </NavLink>
         )}
         <NavLink to="/sendManualEmail" activeclassname="active">
           Send PDF Manually
+        </NavLink>
+        <NavLink to="/outOfStock" activeclassname="active">
+          Out of Stock-{count}
         </NavLink>
       </nav>
       <div className="sidebar-footer">

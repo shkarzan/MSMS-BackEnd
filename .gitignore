@@ -6,7 +6,9 @@ target/
 src/test
 .env
 src/main/MSMS-FrontEnd/node
-src/main/resources/application.properties
+src/main/MSMS-FrontEnd/node_modules
+src/main/MSMS-FrontEnd/dist
+src/main/resources
 
 ### STS ###
 .apt_generated

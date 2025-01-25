@@ -1,9 +1,9 @@
 import { use, useEffect, useState } from "react";
 import "../Css/Sales.css";
-import Sidebar from "./StaffSidebar";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
-const Sales = ({ logout, name, isAdmin }) => {
+import CommonTable from "./CommonTable";
+const Sales = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sales, setSales] = useState([]);
   const url = "http://localhost:8080/api/sales";
@@ -11,7 +11,6 @@ const Sales = ({ logout, name, isAdmin }) => {
     await axios
       .get(`${url}/all`)
       .then((res) => {
-        console.log(res.data);
         setSales(res.data);
       })
       .catch((err) => {
@@ -21,6 +20,15 @@ const Sales = ({ logout, name, isAdmin }) => {
   useEffect(() => {
     loadSales();
   }, []);
+
+  const tableHeader = [
+    "Sales Id",
+    "Sub Total",
+    "Tax Amount",
+    "Discount Amount",
+    "Total",
+    "Action",
+  ];
 
   const handleSalesDelete = async (salesId) => {
     await axios
@@ -41,7 +49,6 @@ const Sales = ({ logout, name, isAdmin }) => {
 
   return (
     <div className="sales">
-      {/* <Sidebar logout={logout} name={name} isAdmin={isAdmin} /> */}
       <h1>Sales</h1>
       <div className="search-bar">
         <input
@@ -51,34 +58,12 @@ const Sales = ({ logout, name, isAdmin }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Sales Id</th>
-            <th>Sub Total</th>
-            <th>Tax Amount</th>
-            <th>Discount Amount</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredSales.map((sale, index) => (
-            <tr key={index}>
-              <th scope="row">{sale.salesId}</th>
-              <td>{sale.subTotal}</td>
-              <td>{sale.taxAmount}</td>
-              <td>{sale.discountAmount}</td>
-              <td>{sale.total}</td>
-              <td>
-                <button onClick={() => handleSalesDelete(sale.salesId)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <CommonTable
+        tableHeader={tableHeader}
+        aob={filteredSales}
+        removeFun={handleSalesDelete}
+        data={"sales"}
+      />
     </div>
   );
 };

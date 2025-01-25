@@ -12,10 +12,10 @@ public class Sales {
     private Double taxAmount;
     private Long discountRate;
     private Double discountAmount;
-    private Long total;
+    private Double total;
 
     public Sales(){}
-    public Sales(Long salesId, Long subTotal, Long taxRate, Double taxAmount, Long discountRate, Double discountAmount, Long total) {
+    public Sales(Long salesId, Long subTotal, Long taxRate, Double taxAmount, Long discountRate, Double discountAmount, Double total) {
         this.salesId = salesId;
         this.subTotal = subTotal;
         this.taxRate = taxRate;
@@ -73,11 +73,11 @@ public class Sales {
         this.discountAmount = discountAmount;
     }
 
-    public Long getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(Long total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 }

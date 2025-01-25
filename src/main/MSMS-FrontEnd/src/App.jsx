@@ -1,5 +1,5 @@
 // App.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -23,10 +23,11 @@ import Sales from "./components/Sales";
 import Customers from "./components/Customers";
 import AdminRoute from "./Utils/AdminRoute";
 import Unauthorized from "./components/Unauthorized";
-import AdminDashboard from "./components/AdminDashboard";
 import StaffDashboard from "./components/StaffDashboard";
 import Dashboard from "./components/Dashboard";
 import SendEmailManually from "./components/SendEmailManually";
+import OutOfStock from "./components/OutOfStock";
+import axios from "axios";
 
 function App() {
   const authenticated =
@@ -50,6 +51,21 @@ function App() {
     setIsAuthenticated(true);
   };
 
+  const [count, setCount] = useState(0);
+  const getCountOfOutOfStock = async () => {
+    await axios
+      .get("http://localhost:8080/api/medicine/getCountOfOOS")
+      .then((res) => {
+        setCount(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getCountOfOutOfStock();
+  }, []);
   const logout = () => {
     <Navigate to="/login" />;
     sessionStorage.removeItem("user");
@@ -77,7 +93,13 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />}></Route>
             <Route element={<ProtectedRoute isAuth={isAuthenticated} />}>
               <Route
-                element={<StaffDashboard logout={logout} isAdmin={isAdmin} />}
+                element={
+                  <StaffDashboard
+                    logout={logout}
+                    isAdmin={isAdmin}
+                    count={count}
+                  />
+                }
               >
                 <Route path="/addMedicine" element={<AddMedicine />} />
                 <Route path="/inventory" element={<Inventory />} />
@@ -88,6 +110,7 @@ function App() {
                   path="/sendManualEmail"
                   element={<SendEmailManually />}
                 />
+                <Route path="/outOfStock" element={<OutOfStock />} />
               </Route>
             </Route>
             <Route
@@ -99,7 +122,13 @@ function App() {
               }
             >
               <Route
-                element={<StaffDashboard logout={logout} isAdmin={isAdmin} />}
+                element={
+                  <StaffDashboard
+                    logout={logout}
+                    isAdmin={isAdmin}
+                    count={count}
+                  />
+                }
               >
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/invoices" element={<Invoices />} />

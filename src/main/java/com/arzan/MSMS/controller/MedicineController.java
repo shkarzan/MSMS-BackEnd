@@ -1,7 +1,7 @@
 package com.arzan.MSMS.controller;
 
 import java.util.List;
-
+import com.arzan.MSMS.model.InventoryUpdate;
 import com.arzan.MSMS.model.Medicine;
 import com.arzan.MSMS.repository.MedicineRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,16 +47,22 @@ public class MedicineController {
                 .orElseThrow(() -> new MedNotFoundException(medCode));
     }
 
-    @PutMapping("/updateQuantity")
-    String updateMedQuantity(@RequestBody List<String> meds,@RequestBody List<String> quantities){
-        for(int i=0;i<meds.size();i++){
-            int finalI = i;
-            inventoryRepo.findById(meds.get(i)).map(medicine -> {
-                medicine.setQuantity(medicine.getQuantity() - Long.parseLong(quantities.get(finalI)));
-                return inventoryRepo.save(medicine);
-            }).orElseThrow(()-> new MedNotFoundException(meds.get(finalI)));
+    @PutMapping("/updateInventory")
+    String updateMedQuantity(@RequestBody InventoryUpdate inventoryUpdate) {
+        List<String> medCodes = inventoryUpdate.getMedCodes();
+        List<Long> quantities = inventoryUpdate.getQuantities();
+        for (int i = 0; i < medCodes.size(); i++) {
+            Long quan = quantities.get(i);
+            inventoryRepo.findById(medCodes.get(i)).map(val -> {
+                val.setQuantity(val.getQuantity() - quan);
+                return inventoryRepo.save(val);
+            });
         }
-        return "Done";
+        return "Inventory Updated Successfully";
+    }
+    @GetMapping("/getCountOfOOS")
+    Long getCount(){
+        return inventoryRepo.countByQuantityLessThan(10L);
     }
 
     @GetMapping("/all")
@@ -76,6 +82,11 @@ public class MedicineController {
         }
         inventoryRepo.deleteById(medCode);
         return "Medicine with code " + medCode + " deleted";
+    }
+
+    @GetMapping("/outOfStock")
+    List<Medicine> getOutOfStockMeds(){
+        return inventoryRepo.findByQuantityLessThan(10L);
     }
 
 

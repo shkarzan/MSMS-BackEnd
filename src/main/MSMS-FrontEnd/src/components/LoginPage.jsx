@@ -28,13 +28,12 @@ const LoginPage = ({ login, setIsAdmin }) => {
             login(sessionData.name);
             if (sessionData.level) {
               setIsAdmin(true);
-              navigate("/dashboard");
               NotificationManager.success("Logged In Successfully as Admin");
             } else {
               setIsAdmin(false);
-              navigate("/inventory");
               NotificationManager.success("Logged In Successfully");
             }
+            navigate("/inventory")
           }
         }
       })

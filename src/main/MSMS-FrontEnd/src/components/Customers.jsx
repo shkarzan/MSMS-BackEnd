@@ -3,6 +3,7 @@ import "../Css/Sales.css";
 import Sidebar from "./StaffSidebar";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
+import CommonTable from "./CommonTable";
 // import { NotificationManager } from "react-notifications";
 
 const Customers = () => {
@@ -20,6 +21,8 @@ const Customers = () => {
       });
   };
 
+  const [addCustomerOn, setAddCustomerOn] = useState(false);
+
   useEffect(() => {
     loadCustomers();
   }, []);
@@ -28,16 +31,39 @@ const Customers = () => {
     await axios
       .delete(`${url}/delete/${customerId}`)
       .then((res) => {
-        NotificationManager.success(res.data,"",500);
+        NotificationManager.success(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-      loadCustomers();
+    loadCustomers();
   };
 
+  const saveCustomer = async (e) => {
+    e.preventDefault();
+    await axios
+      .post(`${url}/add`, customer)
+      .then((res) => {
+        setAddCustomerOn(!addCustomerOn);
+        NotificationManager.success("Customer Added");
+        loadCustomers();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleCustomerChange = (e) => {
+    setCustomer({ ...customer, [e.target.name]: e.target.value });
+  };
+  const [customer, setCustomer] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
   const filteredCustomers = customers.filter((customer) => {
-    return customer.customerId.toString().includes(searchTerm);
+    return customer.name.toString().includes(searchTerm);
   });
   return (
     <div className="sales">
@@ -46,39 +72,46 @@ const Customers = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by Customer id"
+          placeholder="Search by Customer Name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Customer Id</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCustomers.map((customer, index) => (
-            <tr key={index}>
-              <th scope="row">{customer.customerId}</th>
-              <td>{customer.name}</td>
-              <td>{customer.phone}</td>
-              <td>{customer.email}</td>
-              <td>
-                <button
-                  onClick={() => handleCustomerDelete(customer.customerId)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="buttons">
+        <button onClick={() => setAddCustomerOn(!addCustomerOn)}>
+          Add Customer
+        </button>
+        <button>Update Customer</button>
+      </div>
+      {addCustomerOn && (
+        <form onSubmit={(e) => saveCustomer(e)}>
+          <label>Name : </label>
+          <input
+            type="text"
+            name="name"
+            onChange={(e) => handleCustomerChange(e)}
+          />
+          <label>Phone : </label>
+          <input
+            type="text"
+            name="phone"
+            onChange={(e) => handleCustomerChange(e)}
+          />
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            onChange={(e) => handleCustomerChange(e)}
+          />
+          <input style={{ margin: "10px" }} type="submit" value="Add" />
+        </form>
+      )}
+      <CommonTable
+        tableHeader={["Customer ID", "Name", "Contact", "Email", "Action"]}
+        aob={filteredCustomers}
+        removeFun={handleCustomerDelete}
+        data={"customer"}
+      />
     </div>
   );
 };

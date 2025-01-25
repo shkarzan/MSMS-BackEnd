@@ -1,17 +1,25 @@
 // components/Invoice.js
 import React, { useEffect, useState } from "react";
 import "../Css/Invoice.css";
-import TableRow from "./TableRow";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 import generateInvoice from "../Utils/generateInvoice";
+import InvoiceTable from "./InvoiceTable";
 
 const AddInvoice = () => {
   const url = "http://localhost:8080/api";
   const [itemCode, setItemCode] = useState("");
   const [formValid, setFormValid] = useState(false);
-  let salesId = 0;
-  let customerId = 0;
+  const [isRight, setIsRight] = useState(true);
+  const [testQuantites, setTestQuantities] = useState([]);
+  const [testTotals, setTestTotals] = useState([]);
+  const [cId, setCId] = useState("");
+  const [medList, setMedList] = useState([]);
+  const [customer, setCustomer] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
   const [invoiceData, setInvoiceData] = useState({
     subTotal: 0,
     taxRate: 0,
@@ -21,35 +29,34 @@ const AddInvoice = () => {
     total: 0,
   });
 
+  const searchCustomer = async () => {
+    await axios
+      .get(`${url}/customer/get/${cId}`)
+      .then((res) => {
+        console.log(res.data);
+        setCustomer({
+          name: res.data.name,
+          email: res.data.email,
+          phone: res.data.phone,
+        });
+      })
+      .catch((err) => {
+        NotificationManager.error(err.response.data.ErrorMessage);
+        setCustomer({
+          name: "",
+          phone: "",
+          email: "",
+        });
+      });
+  };
+
+  let salesId = 0;
+
   const handleInvoiceDataChange = (e) => {
     setInvoiceData({ ...invoiceData, [e.target.name]: e.target.value });
   };
 
   //Invoice
-  const [medList, setMedList] = useState([]);
-
-  // Customer
-  const handleCustomerChange = (e) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value });
-  };
-  const [customer, setCustomer] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
-
-  const saveCustomer = async () => {
-    await axios
-      .post(`${url}/customer/add`, customer)
-      .then((res) => {
-        customerId = res.data.customerId;
-        NotificationManager.success("Customer Added");
-        console.log(customerId);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   const saveSale = async () => {
     await axios
@@ -64,49 +71,31 @@ const AddInvoice = () => {
       });
   };
 
-  const isCustomerFormValid = () => {
-    if (
-      customer.name === "" ||
-      customer.phone === "" ||
-      customer.email === "" ||
-      medList.length === 0 ||
-      customer.phone.length > 10
-    ) {
-      setFormValid(false);
-    } else setFormValid(true);
-  };
-
   const handleGenInvoice = () => {
     if (formValid) {
-      saveCustomer();
+      saveSale();
       setTimeout(() => {
-        saveSale();
-        setTimeout(() => {
-          console.log(customerId, salesId);
-          generateInvoice(
-            medList,
-            systemData,
-            customer,
-            quantities,
-            totals,
-            date,
-            invoiceData,
-            customerId,
-            salesId
-          );
-        }, 1000);
+        generateInvoice(
+          medList,
+          systemData,
+          customer,
+          testQuantites,
+          testTotals,
+          date,
+          invoiceData,
+          cId,
+          salesId
+        );
       }, 1000);
-    } else NotificationManager.error("Invoice Invalid");
+    } else NotificationManager.error("Invoice Form Invalid or Incomplete");
   };
 
-  let totals = [];
-  let quantities = [];
-
-  const date = new Date()
-    .toISOString()
-    .split("T")[0]
-    .replace("-", "/")
-    .replace("-", "/");
+  const today = new Date();
+  const date = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(today);
 
   const [systemData, setSystemDetails] = useState({
     companyName: "",
@@ -136,7 +125,6 @@ const AddInvoice = () => {
   }, []);
 
   const searchItemCode = async () => {
-    console.log(medList);
     await axios
       .get(`${url}/medicine/${itemCode}`)
       .then((res) => {
@@ -148,26 +136,45 @@ const AddInvoice = () => {
         } else {
           setMedList([...medList, res.data]);
         }
+        setItemCode("");
       })
       .catch((err) => {
         NotificationManager.error(err.response.data.ErrorMessage);
       });
   };
 
-  const removeMed = (medCode) => {
+  const removeMed = (medCode, index) => {
     setMedList(medList.filter((i) => i.medCode !== medCode));
+    setTestQuantities(testQuantites.filter((_i, idx) => idx !== index));
+    setTestTotals(testTotals.filter((_i, idx) => idx !== index));
   };
 
   const onDone = () => {
-    let sum = 0;
-    totals.forEach((val) => {
-      sum += val;
+    medList.map((val, idx) => {
+      if (testQuantites[idx] > val.quantity) {
+        setIsRight(false);
+        setInvoiceData({
+          subTotal: 0,
+          taxAmount: 0,
+          taxRate: 0,
+          discountAmount: 0,
+          total: 0,
+        });
+      } else {
+        let sum = 0;
+        testTotals.forEach((val) => {
+          sum += val;
+        });
+        setInvoiceData({ ...invoiceData, subTotal: sum });
+        setIsRight(true);
+      }
     });
-    setInvoiceData({ ...invoiceData, subTotal: sum });
   };
 
   const calTotal = () => {
-    isCustomerFormValid();
+    if (medList.length > 0) {
+      setFormValid(true);
+    }
     setInvoiceData({
       ...invoiceData,
       taxAmount: (invoiceData.taxRate / 100) * invoiceData.subTotal,
@@ -184,30 +191,43 @@ const AddInvoice = () => {
       <h1>Invoice</h1>
       {/* Customer Information */}
       <section className="customer-info">
+        <h3>
+          <input
+            type="text"
+            placeholder="Customer ID"
+            className="input-field"
+            value={cId}
+            onChange={(e) => setCId(e.target.value)}
+          />
+          <input
+            type="submit"
+            value="Search"
+            disabled={cId === "" ? true : false}
+            onClick={searchCustomer}
+          />
+        </h3>
+
         <h3>Bill To:</h3>
         <input
           type="text"
+          readOnly
+          value={customer.name}
           placeholder="Customer Name"
-          onChange={(e) => handleCustomerChange(e)}
           className="input-field"
-          name="name"
-          required
         />
         <input
           type="text"
+          readOnly
+          value={customer.phone}
           placeholder="Customer Phone Number"
-          onChange={(e) => handleCustomerChange(e)}
           className="input-field"
-          name="phone"
-          required
         />
         <input
           type="email"
           placeholder="Customer Email"
-          onChange={(e) => handleCustomerChange(e)}
+          readOnly
+          value={customer.email}
           className="input-field"
-          name="email"
-          required
         />
       </section>
 
@@ -224,6 +244,7 @@ const AddInvoice = () => {
             type="text"
             placeholder="Item Code"
             className="input-field"
+            value={itemCode}
             onChange={(e) => setItemCode(e.target.value)}
           />
           <input
@@ -233,36 +254,21 @@ const AddInvoice = () => {
             onClick={searchItemCode}
           />
         </div>
-
-        {/* Itemized Table */}
-        <table className="item-table">
-          <thead>
-            <tr>
-              <th>Medicine Code</th>
-              <th>Medicine Name</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Total</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {medList.map((i, index) => (
-              <TableRow
-                key={index}
-                index={index}
-                code={i.medCode}
-                name={i.medName}
-                quantity={i.quantity}
-                price={i.price}
-                removeMed={removeMed}
-                totals={totals}
-                quantities={quantities}
-              />
-            ))}
-          </tbody>
-        </table>
-        <button disabled={medList.length === 0 ? true : false} onClick={onDone}>
+        <InvoiceTable
+          medList={medList}
+          totals={testTotals}
+          quantities={testQuantites}
+          setTotals={setTestTotals}
+          setQuantities={setTestQuantities}
+          removeMed={removeMed}
+          setIsRight={setIsRight}
+          isRight={isRight}
+        />
+        <p>{!isRight && "Quantity choosen is not available"}</p>
+        <button
+          hidden={medList.length === 0 && testQuantites.length === 0}
+          onClick={onDone}
+        >
           Done
         </button>
       </section>
@@ -323,7 +329,6 @@ const AddInvoice = () => {
         type="button"
         onClick={handleGenInvoice}
         className="submit-button"
-        disabled={!formValid}
       >
         Generate Invoice
       </button>

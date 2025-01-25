@@ -10,11 +10,13 @@ public class Invoice {
     private Long customerId;
     @Lob
     private byte[] invoicePdf;
+//    private Date dateCreated;
 
     public Invoice(Long salesId, Long customerId, byte[] invoicePdf) {
         this.salesId = salesId;
         this.customerId = customerId;
         this.invoicePdf = invoicePdf;
+//        this.dateCreated = date;
     }
 
     public Invoice() {

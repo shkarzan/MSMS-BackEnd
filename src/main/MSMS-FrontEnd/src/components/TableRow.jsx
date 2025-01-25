@@ -9,7 +9,7 @@ function TableRow({
   price,
   removeMed,
   totals,
-  quantities
+  quantities,
 }) {
   const [newQuantity, setQuantity] = useState(0);
   let total = newQuantity * price;
@@ -27,6 +27,7 @@ function TableRow({
           type="text"
           placeholder={quantity}
           onChange={(e) => setQuantity(e.target.value)}
+          // value={newQuantity}
         />
       </td>
       <td>{price}</td>
