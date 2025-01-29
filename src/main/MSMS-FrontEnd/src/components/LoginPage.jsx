@@ -18,7 +18,6 @@ const LoginPage = ({ login, setIsAdmin }) => {
     await axios
       .post(`${url}/login`, user)
       .then((res) => {
-        // console.log(res);
         sessionStorage.setItem("user", JSON.stringify(res.data));
         const sessionData = JSON.parse(sessionStorage.getItem("user"));
         if (sessionData.authentication === -1) {
@@ -33,7 +32,9 @@ const LoginPage = ({ login, setIsAdmin }) => {
               setIsAdmin(false);
               NotificationManager.success("Logged In Successfully");
             }
-            navigate("/inventory")
+            navigate("/inventory");
+          } else if (sessionData.authentication === 0) {
+            NotificationManager.error("Invalid Password");
           }
         }
       })
