@@ -29,9 +29,10 @@ const StaffSidebar = ({ logout, isAdmin, count }) => {
         <NavLink to="/addInvoice" activeclassname="active">
           Add Invoice
         </NavLink>
+
         {isAdmin && (
-          <NavLink to="/settings" activeclassname="active">
-            System User Management
+          <NavLink to="/suppliers" activeclassname="active">
+            Supplier Management
           </NavLink>
         )}
         <NavLink to="/sendManualEmail" activeclassname="active">
@@ -40,6 +41,11 @@ const StaffSidebar = ({ logout, isAdmin, count }) => {
         <NavLink to="/outOfStock" activeclassname="active">
           Out of Stock-{count}
         </NavLink>
+        {isAdmin && (
+          <NavLink to="/settings" activeclassname="active">
+            System User Management
+          </NavLink>
+        )}
       </nav>
       <div className="sidebar-footer">
         <p>{isAdmin ? "Admin" : "Staff"}</p>
