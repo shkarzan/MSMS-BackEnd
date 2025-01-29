@@ -8,12 +8,6 @@ const CommonTable = ({ tableHeader, aob, removeFun, data }) => {
           {tableHeader.map((th, index) => (
             <th key={index}>{th}</th>
           ))}
-          {/* <th>Medicine Code</th>
-          <th>Medicine Name</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Expiry Date</th>
-          <th>Actions</th> */}
         </tr>
       </thead>
       <tbody>
@@ -65,23 +59,17 @@ const CommonTable = ({ tableHeader, aob, removeFun, data }) => {
               <td>{med.quantity}</td>
               <td>{med.price}</td>
               <td>{med.expiryDate}</td>
-              {/* <td
-                style={{
-                  display: "flex",
-                  gap: "7px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <button
-                  style={{ backgroundColor: "green" }}
-                  onClick={() => removeFun(med.medCode)}
-                >
-                  Place Order
-                </button>
-                <button>Cancel Order</button>
+            </tr>
+          ))}
+        {data == "supplier" &&
+          aob.map((supplier, index) => (
+            <tr key={index}>
+              <td>{supplier.id}</td>
+              <td>{supplier.supplierName}</td>
+              <td>{supplier.supplierNumber}</td>
+              <td>
+                <button onClick={() => removeFun(supplier.id)}>Remove</button>
               </td>
-              <td>No</td> */}
             </tr>
           ))}
       </tbody>

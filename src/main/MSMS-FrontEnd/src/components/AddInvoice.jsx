@@ -149,7 +149,7 @@ const AddInvoice = () => {
     setTestTotals(testTotals.filter((_i, idx) => idx !== index));
   };
 
-  const onDone = () => {
+  const checkQuantities = () => {
     medList.map((val, idx) => {
       if (testQuantites[idx] > val.quantity) {
         setIsRight(false);
@@ -160,15 +160,25 @@ const AddInvoice = () => {
           discountAmount: 0,
           total: 0,
         });
-      } else {
-        let sum = 0;
-        testTotals.forEach((val) => {
-          sum += val;
-        });
-        setInvoiceData({ ...invoiceData, subTotal: sum });
-        setIsRight(true);
       }
     });
+    console.log("in func ",isRight);
+    
+    return isRight;
+  };
+
+  const onDone = () => {
+    checkQuantities();
+    console.log(isRight);
+
+    if (isRight) {
+      let sum = 0;
+      testTotals.forEach((val) => {
+        sum += val;
+      });
+      setInvoiceData({ ...invoiceData, subTotal: sum });
+      setIsRight(true);
+    }
   };
 
   const calTotal = () => {
