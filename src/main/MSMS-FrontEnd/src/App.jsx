@@ -28,6 +28,9 @@ import Dashboard from "./components/Dashboard";
 import SendEmailManually from "./components/SendEmailManually";
 import OutOfStock from "./components/OutOfStock";
 import axios from "axios";
+import Suppliers from "./components/Suppliers";
+import AddSupplier from "./components/AddSupplier";
+import UpdateSupplier from "./components/UpdateSupplier";
 
 function App() {
   const authenticated =
@@ -63,6 +66,10 @@ function App() {
       });
   };
 
+  //   setInterval(()=>{
+  //       getCountOfOutOfStock();
+  //       console.log("hello");
+  //       },10000);
   useEffect(() => {
     getCountOfOutOfStock();
   }, []);
@@ -102,6 +109,7 @@ function App() {
                 }
               >
                 <Route path="/addMedicine" element={<AddMedicine />} />
+                <Route path="/addSupplier" element={<AddSupplier />} />
                 <Route path="/inventory" element={<Inventory />} />
                 <Route path="/updateMedicine" element={<UpdateMedicine />} />
                 <Route path="/addInvoice" element={<AddInvoice />} />
@@ -134,6 +142,8 @@ function App() {
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/customers" element={<Customers />} />
+                <Route path="/suppliers" element={<Suppliers />} />
+                <Route path="/updateSupplier" element={<UpdateSupplier />} />
               </Route>
             </Route>
           </Routes>
