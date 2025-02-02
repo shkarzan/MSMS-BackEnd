@@ -29,8 +29,6 @@ public class InvoiceController {
     private InvoiceRepo invoiceRepo;
     @Autowired
     private SalesRepo salesRepo;
-    @Autowired
-    private CustomerRepo customerRepo;
 
     @PostMapping("/sendEmail")
     public ResponseEntity<String> sendInvoice(@RequestParam("email") String email, @RequestParam("file")MultipartFile file){
@@ -87,12 +85,11 @@ public class InvoiceController {
     }
 
     @Transactional
-    @DeleteMapping("/delete/{salesId}/{customerId}")
-    ResponseEntity<String> deleteInvoiceBySalesId(@PathVariable Long salesId,@PathVariable Long customerId){
+    @DeleteMapping("/delete/{salesId}")
+    ResponseEntity<String> deleteInvoiceBySalesId(@PathVariable Long salesId){
         if(invoiceRepo.existsById(salesId)){
             invoiceRepo.deleteById(salesId);
             salesRepo.deleteById(salesId);
-            customerRepo.deleteById(customerId);
             return ResponseEntity.ok().body("Invoice Deleted Successfully");
         }
         return ResponseEntity.status(404).body("Invoice with sales id:"+salesId+" not found");

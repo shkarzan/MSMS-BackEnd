@@ -50,9 +50,9 @@ const Invoices = () => {
     return invoice.salesId.toString().includes(searchTerm);
   });
 
-  const deletePdf = async (salesId, customerId) => {
+  const deletePdf = async (salesId) => {
     await axios
-      .delete(`${url}/delete/${salesId}/${customerId}`)
+      .delete(`${url}/delete/${salesId}`)
       .then((res) => {
         NotificationManager.success(res.data);
         loadAllInvoices();
@@ -96,9 +96,7 @@ const Invoices = () => {
                 </a>
               </td>
               <td>
-                <button
-                  onClick={() => deletePdf(invoice.salesId, invoice.customerId)}
-                >
+                <button onClick={() => deletePdf(invoice.salesId)}>
                   Delete
                 </button>
               </td>

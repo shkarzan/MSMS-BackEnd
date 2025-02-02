@@ -170,7 +170,7 @@ const handleInventoryUpdate = async (quantities, medList) => {
     quantities: quantities,
   };
   await axios
-    .put("http://localhost:8080/api/medicine/updateInventory", med)
+    .put("http://localhost:8080/api/medicine/updateInventory/subs", med)
     .then((res) => {
       NotificationManager.success(res.data);
     })
