@@ -3,7 +3,6 @@ package com.arzan.MSMS.controller;
 import com.arzan.MSMS.Service.EmailService;
 import com.arzan.MSMS.exception.SalesNotFound.SalesNotFoundException;
 import com.arzan.MSMS.model.Invoice;
-import com.arzan.MSMS.repository.CustomerRepo;
 import com.arzan.MSMS.repository.InvoiceRepo;
 import com.arzan.MSMS.repository.SalesRepo;
 import jakarta.mail.MessagingException;

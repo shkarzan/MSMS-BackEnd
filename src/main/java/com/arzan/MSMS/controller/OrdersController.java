@@ -2,16 +2,12 @@ package com.arzan.MSMS.controller;
 
 import com.arzan.MSMS.exception.SupplierNotFound.SupplierNotFoundException;
 import com.arzan.MSMS.model.Orders;
-import com.arzan.MSMS.model.Supplier;
 import com.arzan.MSMS.repository.OrdersRepo;
-import com.arzan.MSMS.repository.SalesRepo;
-import com.arzan.MSMS.repository.SupplierRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")

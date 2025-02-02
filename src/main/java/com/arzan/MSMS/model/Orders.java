@@ -1,10 +1,6 @@
 package com.arzan.MSMS.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
-import java.sql.Date;
 
 @Entity
 public class Orders {
