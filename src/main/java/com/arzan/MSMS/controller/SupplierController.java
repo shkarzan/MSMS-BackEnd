@@ -49,6 +49,11 @@ public class SupplierController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/allSupplierName")
+    List<String> getAllSupplierName(){
+        return supplierRepo.findAllSupplierName();
+    }
+
     @PostMapping("/addAll")
     String addAll(@RequestBody List<Supplier> suppliers){
         supplierRepo.saveAll(suppliers);

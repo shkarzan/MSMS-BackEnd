@@ -16,6 +16,9 @@ const StaffSidebar = ({ logout, isAdmin, count }) => {
         <NavLink to="/sales" activeclassname="active">
           Sales Management
         </NavLink>
+        <NavLink to="/orders" activeclassname="active">
+          Orders Management
+        </NavLink>
         {isAdmin && (
           <NavLink to="/customers" activeclassname="active">
             Customer Management

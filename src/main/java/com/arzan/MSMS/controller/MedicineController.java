@@ -47,14 +47,18 @@ public class MedicineController {
                 .orElseThrow(() -> new MedNotFoundException(medCode));
     }
 
-    @PutMapping("/updateInventory")
-    String updateMedQuantity(@RequestBody InventoryUpdate inventoryUpdate) {
+    @PutMapping("/updateInventory/{operation}")
+    String updateMedQuantity(@RequestBody InventoryUpdate inventoryUpdate,@PathVariable String operation) {
         List<String> medCodes = inventoryUpdate.getMedCodes();
         List<Long> quantities = inventoryUpdate.getQuantities();
         for (int i = 0; i < medCodes.size(); i++) {
             Long quan = quantities.get(i);
             inventoryRepo.findById(medCodes.get(i)).map(val -> {
-                val.setQuantity(val.getQuantity() - quan);
+                if (operation.equals("add")) {
+                    val.setQuantity(val.getQuantity() + quan);
+                } else if (operation.equals("subs")) {
+                    val.setQuantity(val.getQuantity() - quan);
+                }
                 return inventoryRepo.save(val);
             });
         }

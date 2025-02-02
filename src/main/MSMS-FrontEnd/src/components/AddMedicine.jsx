@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import "../Css/AddMedicine.css";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const AddMedicine = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [med, setMed] = useState({
-    medCode: "",
-    medName: "",
+    medCode: location.state === null ? "" : location.state.medCode,
+    medName: location.state === null ? "" : location.state.medName,
     price: 0,
-    quantity: 0,
+    quantity: location.state === null ? "" : location.state.quantity,
     expiryDate: "",
   });
 
@@ -42,6 +43,7 @@ const AddMedicine = () => {
             type="text"
             id="name"
             name="medCode"
+            value={med.medCode}
             required
             onChange={(e) => handleChange(e)}
           />
@@ -52,6 +54,7 @@ const AddMedicine = () => {
             type="text"
             name="medName"
             onChange={(e) => handleChange(e)}
+            value={med.medName}
             required
           />
         </div>
@@ -61,6 +64,7 @@ const AddMedicine = () => {
             type="text"
             name="quantity"
             onChange={(e) => handleChange(e)}
+            value={med.quantity}
             required
           />
         </div>

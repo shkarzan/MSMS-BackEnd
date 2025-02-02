@@ -31,6 +31,7 @@ import axios from "axios";
 import Suppliers from "./components/Suppliers";
 import AddSupplier from "./components/AddSupplier";
 import UpdateSupplier from "./components/UpdateSupplier";
+import Orders from "./components/Orders";
 
 function App() {
   const authenticated =
@@ -38,11 +39,11 @@ function App() {
       ? false
       : JSON.parse(sessionStorage.getItem("user")).authentication;
   const [isAuthenticated, setIsAuthenticated] = useState(authenticated);
+
   const admin =
     sessionStorage.getItem("user") === null
       ? false
       : JSON.parse(sessionStorage.getItem("user")).level;
-
   const [isAdmin, setIsAdmin] = useState(admin);
 
   const Name =
@@ -66,10 +67,6 @@ function App() {
       });
   };
 
-  //   setInterval(()=>{
-  //       getCountOfOutOfStock();
-  //       console.log("hello");
-  //       },10000);
   useEffect(() => {
     getCountOfOutOfStock();
   }, []);
@@ -114,6 +111,7 @@ function App() {
                 <Route path="/updateMedicine" element={<UpdateMedicine />} />
                 <Route path="/addInvoice" element={<AddInvoice />} />
                 <Route path="/sales" element={<Sales />} />
+                <Route path="/orders" element={<Orders />} />
                 <Route
                   path="/sendManualEmail"
                   element={<SendEmailManually />}
