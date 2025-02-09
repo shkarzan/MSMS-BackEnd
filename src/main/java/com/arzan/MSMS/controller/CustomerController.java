@@ -1,7 +1,6 @@
 package com.arzan.MSMS.controller;
 
 import com.arzan.MSMS.exception.CustomerNotFound.CustomerNotFoundException;
-import com.arzan.MSMS.exception.UserNotFound.UserNotFoundException;
 import com.arzan.MSMS.model.Customer;
 import com.arzan.MSMS.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class CustomerController {
                     c.setName(customer.getName());
                     c.setPhone(customer.getPhone());
                     return customerRepo.save(c);
-                }).orElseThrow(()-> new UserNotFoundException(customer.getName()));
+                }).orElseThrow(()-> new CustomerNotFoundException(id));
     }
 
     @GetMapping("/all")

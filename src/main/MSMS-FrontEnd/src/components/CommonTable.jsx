@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 
 const CommonTable = ({
@@ -9,7 +10,18 @@ const CommonTable = ({
   orderReceived,
   data,
   orders,
+  medNames,
+  changeOrderStatus,
+  isAdmin,
 }) => {
+  const checkIfOrderCompleted = (medName, orderId) => {
+    if (medNames.includes(medName)) {
+      changeOrderStatus(orderId);
+    } else {
+      NotificationManager.error("Order not recieved yet");
+    }
+  };
+
   const navigate = useNavigate();
   const toAddMedicineComponent = (medCode, medName, quantity) => {
     navigate("/addMedicine", {
@@ -34,7 +46,10 @@ const CommonTable = ({
               <td>{customer.phone}</td>
               <td>{customer.email}</td>
               <td>
-                <button onClick={() => removeFun(customer.customerId)}>
+                <button
+                  onClick={() => removeFun(customer.customerId)}
+                  disabled={!isAdmin}
+                >
                   Delete
                 </button>
               </td>
@@ -49,7 +64,12 @@ const CommonTable = ({
               <td>{med.price}</td>
               <td>{med.expiryDate}</td>
               <td>
-                <button onClick={() => removeFun(med.salesId)}>Remove</button>
+                <button
+                  onClick={() => removeFun(med.medCode)}
+                  disabled={!isAdmin}
+                >
+                  Remove
+                </button>
               </td>
             </tr>
           ))}
@@ -58,11 +78,18 @@ const CommonTable = ({
             <tr key={index}>
               <td>{sale.salesId}</td>
               <td>{sale.subTotal}</td>
+              <td>{sale.taxRate.toFixed(2)}</td>
               <td>{sale.taxAmount.toFixed(2)}</td>
+              <td>{sale.discountRate.toFixed(2)}</td>
               <td>{sale.discountAmount.toFixed(2)}</td>
               <td>{sale.total.toFixed(2)}</td>
               <td>
-                <button onClick={() => removeFun(sale.salesId)}>Remove</button>
+                <button
+                  onClick={() => removeFun(sale.salesId)}
+                  disabled={!isAdmin}
+                >
+                  Remove
+                </button>
               </td>
             </tr>
           ))}
@@ -99,7 +126,12 @@ const CommonTable = ({
               <td>{supplier.supplierName}</td>
               <td>{supplier.supplierNumber}</td>
               <td>
-                <button onClick={() => removeFun(supplier.id)}>Remove</button>
+                <button
+                  onClick={() => removeFun(supplier.id)}
+                  disabled={!isAdmin}
+                >
+                  Remove
+                </button>
               </td>
             </tr>
           ))}
@@ -135,11 +167,26 @@ const CommonTable = ({
                   }}
                   disabled={order.status === "Completed"}
                 >
-                  {order.medCode === "NA" ? "Add Medicine" : "Order Recieved"}
+                  {order.status === "Completed"
+                    ? "Order Recieved"
+                    : "Add Medicine"}
                 </button>
-                {/* {order.status === "Pending" && ( */}
-                <button onClick={() => removeFun(order.orderId)}>
+                <button
+                  onClick={() => removeFun(order.orderId)}
+                  disabled={!isAdmin}
+                >
                   {order.status === "Pending" ? "Cancel Order" : "Remove Order"}
+                </button>
+                <button
+                  style={{ marginLeft: "5px" }}
+                  hidden={
+                    order.medCode !== "NA" || order.status === "Completed"
+                  }
+                  onClick={() =>
+                    checkIfOrderCompleted(order.medName, order.orderId)
+                  }
+                >
+                  Check if Recieved
                 </button>
                 {/* )} */}
               </td>

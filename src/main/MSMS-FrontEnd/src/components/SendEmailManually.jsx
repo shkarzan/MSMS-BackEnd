@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 
 export default function SendEmailManually() {
-  const url = "http://localhost:8080/api/invoice";
+  const url = "/api/invoice";
   const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",

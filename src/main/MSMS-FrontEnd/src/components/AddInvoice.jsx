@@ -7,11 +7,11 @@ import generateInvoice from "../Utils/generateInvoice";
 import InvoiceTable from "./InvoiceTable";
 
 const AddInvoice = () => {
-  const url = "http://localhost:8080/api";
   const [itemCode, setItemCode] = useState("");
   const [formValid, setFormValid] = useState(false);
   const [isRight, setIsRight] = useState(true);
   const [testQuantites, setTestQuantities] = useState([]);
+  let maxQuantities = [];
   const [testTotals, setTestTotals] = useState([]);
   const [cId, setCId] = useState("");
   const [medList, setMedList] = useState([]);
@@ -31,7 +31,7 @@ const AddInvoice = () => {
 
   const searchCustomer = async () => {
     await axios
-      .get(`${url}/customer/get/${cId}`)
+      .get(`/api/customer/get/${cId}`)
       .then((res) => {
         console.log(res.data);
         setCustomer({
@@ -50,44 +50,39 @@ const AddInvoice = () => {
       });
   };
 
-  let salesId = 0;
-
   const handleInvoiceDataChange = (e) => {
     setInvoiceData({ ...invoiceData, [e.target.name]: e.target.value });
   };
 
-  //Invoice
-
-  const saveSale = async () => {
-    await axios
-      .post(`${url}/sales/add`, invoiceData)
-      .then((res) => {
-        salesId = res.data.salesId;
-        NotificationManager.success("Sales Added");
-        console.log(salesId);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleGenInvoice = () => {
-    if (formValid) {
-      saveSale();
-      setTimeout(() => {
-        generateInvoice(
-          medList,
-          systemData,
-          customer,
-          testQuantites,
-          testTotals,
-          date,
-          invoiceData,
-          cId,
-          salesId
-        );
-      }, 1000);
-    } else NotificationManager.error("Invoice Form Invalid or Incomplete");
+  const handleGenInvoice = async () => {
+    if (
+      invoiceData.subTotal === 0 ||
+      invoiceData.total === 0 ||
+      customer.name === "" ||
+      customer.email === ""
+    ) {
+      NotificationManager.error("Invalid Data cannot generate invoice");
+    } else {
+      await axios
+        .post(`/api/sales/add`, invoiceData)
+        .then((res) => {
+          generateInvoice(
+            medList,
+            systemData,
+            customer,
+            testQuantites,
+            testTotals,
+            date,
+            invoiceData,
+            cId,
+            res.data.salesId
+          );
+          NotificationManager.success("Sales Added");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const today = new Date();
@@ -106,7 +101,7 @@ const AddInvoice = () => {
 
   const loadSystemData = async () => {
     await axios
-      .get(`${url}/system/get`)
+      .get(`/api/system/get`)
       .then((res) => {
         setSystemDetails({
           companyName: res.data[0].companyName,
@@ -126,20 +121,25 @@ const AddInvoice = () => {
 
   const searchItemCode = async () => {
     await axios
-      .get(`${url}/medicine/${itemCode}`)
+      .get(`/api/medicine/${itemCode}`)
       .then((res) => {
         const i = medList.filter((i) => {
-          return i.medCode === res.data.medCode;
+          return i.medCode.toLowerCase() === res.data.medCode.toLowerCase();
         });
         if (i.length > 0) {
           NotificationManager.info("Already Exist");
         } else {
           setMedList([...medList, res.data]);
+          maxQuantities.push(res.data.quantity);
         }
         setItemCode("");
       })
       .catch((err) => {
-        NotificationManager.error(err.response.data.ErrorMessage);
+        if (err.message == "Network Error") {
+          NotificationManager.error(err.message);
+        } else {
+          console.log(err.message);
+        }
       });
   };
 
@@ -149,28 +149,7 @@ const AddInvoice = () => {
     setTestTotals(testTotals.filter((_i, idx) => idx !== index));
   };
 
-  const checkQuantities = () => {
-    medList.map((val, idx) => {
-      if (testQuantites[idx] > val.quantity) {
-        setIsRight(false);
-        setInvoiceData({
-          subTotal: 0,
-          taxAmount: 0,
-          taxRate: 0,
-          discountAmount: 0,
-          total: 0,
-        });
-      }
-    });
-    console.log("in func ",isRight);
-    
-    return isRight;
-  };
-
   const onDone = () => {
-    checkQuantities();
-    console.log(isRight);
-
     if (isRight) {
       let sum = 0;
       testTotals.forEach((val) => {
@@ -272,13 +251,9 @@ const AddInvoice = () => {
           setQuantities={setTestQuantities}
           removeMed={removeMed}
           setIsRight={setIsRight}
-          isRight={isRight}
         />
         <p>{!isRight && "Quantity choosen is not available"}</p>
-        <button
-          hidden={medList.length === 0 && testQuantites.length === 0}
-          onClick={onDone}
-        >
+        <button hidden={!isRight} onClick={onDone}>
           Done
         </button>
       </section>

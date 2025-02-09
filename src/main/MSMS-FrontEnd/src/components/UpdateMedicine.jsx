@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 
 export default function UpdateMedicine() {
-  const url = "http://localhost:8080/api/medicine";
+  const url = "/api/medicine";
   const navigate = useNavigate();
   const [med, setMedData] = useState({
     medCode: "",
@@ -60,9 +60,8 @@ export default function UpdateMedicine() {
       })
       .catch((err) => {
         console.log(err);
-        // NotificationManager.error(err);
       });
-    // console.log("Form data submitted:");
+    navigate("/inventory");
   };
 
   return (

@@ -1,13 +1,14 @@
 // components/Sales.js
 import React, { useEffect, useState } from "react";
 import "../Css/Sales.css";
-import Sidebar from "./StaffSidebar";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 
 const Invoices = () => {
-  const url = "http://localhost:8080/api/invoice";
+  const url = "/api/invoice";
   const getPdf = async (salesId) => {
+    // console.log(invoices);
+
     await axios
       .get(`${url}/get/${salesId}`, {
         responseType: "blob",

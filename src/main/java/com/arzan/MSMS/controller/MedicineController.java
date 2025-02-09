@@ -74,6 +74,11 @@ public class MedicineController {
         return inventoryRepo.findAll();
     }
 
+    @GetMapping("/allMedName")
+    List<String> getAllMedNames(){
+        return inventoryRepo.findAllByMedName();
+    }
+
     @GetMapping("/{medCode}")
     Medicine getMed(@PathVariable String medCode) {
         return inventoryRepo.findById(medCode).orElseThrow(() -> new MedNotFoundException(medCode));

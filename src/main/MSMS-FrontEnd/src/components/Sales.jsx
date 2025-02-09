@@ -3,10 +3,10 @@ import "../Css/Sales.css";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 import CommonTable from "./CommonTable";
-const Sales = () => {
+const Sales = ({ isAdmin }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sales, setSales] = useState([]);
-  const url = "http://localhost:8080/api/sales";
+  const url = "/api/sales";
   const loadSales = async () => {
     await axios
       .get(`${url}/all`)
@@ -24,7 +24,9 @@ const Sales = () => {
   const tableHeader = [
     "Sales Id",
     "Sub Total",
+    "Tax Rate (%)",
     "Tax Amount",
+    "Discount Rate (%)",
     "Discount Amount",
     "Total",
     "Action",
@@ -63,6 +65,7 @@ const Sales = () => {
         aob={filteredSales}
         removeFun={handleSalesDelete}
         data={"sales"}
+        isAdmin={isAdmin}
       />
     </div>
   );

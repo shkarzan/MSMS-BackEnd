@@ -11,7 +11,7 @@ const AddSupplier = () => {
     supplierNumber: 0,
   });
 
-  const url = "http://localhost:8080/api/supplier";
+  const url = "/api/supplier";
 
   const handleChange = (e) => {
     setSupplier({ ...supplier, [e.target.name]: e.target.value });
@@ -27,6 +27,7 @@ const AddSupplier = () => {
       .catch((err) => {
         NotificationManager.error(err);
       });
+    navigate("/suppliers");
   };
 
   return (

@@ -13,8 +13,8 @@ export default function OutOfStock() {
     year: "numeric",
   }).format(today);
   // const navigate = useNavigate();
-  const url = "http://localhost:8080/api/medicine";
-  const url2 = "http://localhost:8080/api/orders";
+  const url = "/api/medicine";
+  const url2 = "/api/orders";
   const [meds, setMed] = useState([]);
   const [orders, setOrders] = useState([]);
   const loadOrders = async () => {
@@ -41,7 +41,7 @@ export default function OutOfStock() {
 
   const loadSuppliers = async () => {
     await axios
-      .get("http://localhost:8080/api/supplier/allSupplierName")
+      .get("/api/supplier/allSupplierName")
       .then((res) => {
         setSupplierNames(res.data);
       })
@@ -85,7 +85,7 @@ export default function OutOfStock() {
       NotificationManager.error("Invalid order data");
     } else {
       await axios
-        .post("http://localhost:8080/api/orders/add", orderData)
+        .post("/api/orders/add", orderData)
         .then((res) => {
           console.log(res.data);
           loadOrders();
@@ -95,18 +95,6 @@ export default function OutOfStock() {
           console.log(err);
         });
     }
-  };
-
-  const removeMed = async (medCode) => {
-    await axios
-      .delete(`${url}/delete/${medCode}`)
-      .then((res) => {
-        NotificationManager.success(res.data);
-      })
-      .catch((err) => {
-        NotificationManager.error(err.response.data.ErrorMessage);
-      });
-    loadMeds();
   };
 
   const filteredMeds = meds.filter(

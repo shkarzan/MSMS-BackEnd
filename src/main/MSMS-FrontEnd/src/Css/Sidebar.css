@@ -16,16 +16,14 @@
 .sidebar-logo {
   width: 100px; /* Adjust size as needed */
   height: 100px;
-  margin-bottom: 20px;
   background-image: url(../assets/medical-logo.png); /* Update this path */
   background-size: cover;
   background-position: center;
 }
 
 .sidebar h2 {
-  font-size: 1.5em;
+  font-size: 1em;
   color: #ecf0f1;
-  margin-bottom: 30px;
 }
 
 .sidebar nav {

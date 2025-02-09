@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../Css/Invoice.css";
-import { use } from "react";
 
 export default function InvoiceTable({
   medList,
@@ -9,14 +8,20 @@ export default function InvoiceTable({
   setTotals,
   setQuantities,
   removeMed,
+  setIsRight,
 }) {
-  const handleQuantityChange = (index, price, e, quantityLeft) => {
-    let newQuantities = [...quantities];
-    let newTotals = [...totals];
-    newQuantities[index] = e.target.value;
-    newTotals[index] = newQuantities[index] * price;
-    setQuantities(newQuantities);
-    setTotals(newTotals);
+  const handleQuantityChange = (index, price, e, quantity) => {
+    if (e.target.value > quantity) {
+      setIsRight(false);
+    } else {
+      setIsRight(true);
+      let newQuantities = [...quantities];
+      let newTotals = [...totals];
+      newQuantities[index] = e.target.value;
+      newTotals[index] = newQuantities[index] * price;
+      setQuantities(newQuantities);
+      setTotals(newTotals);
+    }
   };
   return (
     <table className="item-table">

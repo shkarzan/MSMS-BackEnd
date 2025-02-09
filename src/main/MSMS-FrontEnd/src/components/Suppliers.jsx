@@ -6,9 +6,9 @@ import axios from "axios";
 import { NotificationManager } from "react-notifications";
 import CommonTable from "./CommonTable";
 
-const Suppliers = () => {
+const Suppliers = ({ isAdmin }) => {
   const navigate = useNavigate();
-  const url = "http://localhost:8080/api/supplier";
+  const url = "/api/supplier";
   const [suppliers, setSuppliers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const loadSuppliers = async () => {
@@ -54,7 +54,10 @@ const Suppliers = () => {
         </div>
         <div className="buttons">
           <button onClick={() => navigate("/addSupplier")}>Add Supplier</button>
-          <button onClick={() => navigate("/updateSupplier")}>
+          <button
+            onClick={() => navigate("/updateSupplier")}
+            disabled={!isAdmin}
+          >
             Update Supplier
           </button>
         </div>
@@ -68,6 +71,7 @@ const Suppliers = () => {
           aob={filteredSuppliers}
           removeFun={removeSupplier}
           data={"supplier"}
+          isAdmin={isAdmin}
         />
       </div>
     </div>

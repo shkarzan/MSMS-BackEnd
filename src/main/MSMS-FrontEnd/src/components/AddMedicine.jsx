@@ -2,9 +2,49 @@ import React, { useState } from "react";
 import "../Css/AddMedicine.css";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const today = new Date();
+const formattedToday = today.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+
+const schema = yup.object({
+  medCode: yup.string().required("Med Code is required"),
+  medName: yup.string().required("Name is required"),
+  quantity: yup
+    .number()
+    .typeError("Quantity must be a number")
+    .positive("Quantity must be a positive number")
+    .integer("Quantity must be a integer")
+    .required("Quantity is required is required"),
+  price: yup
+    .number()
+    .typeError("Price must be a number")
+    .positive("Price must be a positive number")
+    .required("Price is required")
+    .test(
+      "is-decimal",
+      "Price cannot have more than two decimal places",
+      (value) => {
+        return /^\d+(\.\d{1,2})?$/.test(value); // Allows up to two decimal places
+      }
+    ),
+  expiryDate: yup
+    .date()
+    .min(formattedToday, "Date cannot be before today's date") // Prevents date before today
+    .required("Date is required"),
+});
 
 const AddMedicine = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   const location = useLocation();
   const navigate = useNavigate();
   const [med, setMed] = useState({
@@ -15,76 +55,85 @@ const AddMedicine = () => {
     expiryDate: "",
   });
 
-  const url = "http://localhost:8080/api/medicine";
+  const url = "/api/medicine";
 
   const handleChange = (e) => {
     setMed({ ...med, [e.target.name]: e.target.value });
   };
 
-  const saveMed = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (medData, event) => {
+    event.preventDefault();
+    medData.expiryDate = med.expiryDate;
     await axios
-      .post(`${url}/add`, med)
+      .post(`${url}/add`, medData)
       .then(() => {
         NotificationManager.success("Medicine Added Successfully", "", 1000);
       })
       .catch((err) => {
         NotificationManager.error(err);
       });
+    navigate("/inventory");
   };
 
   return (
     <div className="form-container">
-      <form className="form" onSubmit={(e) => saveMed(e)}>
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
         <h2>Add Medicine Details</h2>
         <div className="form-group">
-          <label htmlFor="name">Medicine Code:</label>
+          <label>Medicine Code:</label>
           <input
             type="text"
-            id="name"
             name="medCode"
             value={med.medCode}
-            required
+            {...register("medCode")}
             onChange={(e) => handleChange(e)}
           />
+          <p>{errors.medCode?.message}</p>
         </div>
         <div className="form-group">
-          <label htmlFor="email">Name:</label>
+          <label>Name:</label>
           <input
             type="text"
             name="medName"
+            {...register("medName")}
             onChange={(e) => handleChange(e)}
             value={med.medName}
-            required
           />
+          <p>{errors.medName?.message}</p>
         </div>
         <div className="form-group">
-          <label htmlFor="username">Quantity:</label>
+          <label>Quantity:</label>
           <input
             type="text"
             name="quantity"
+            {...register("quantity")}
             onChange={(e) => handleChange(e)}
             value={med.quantity}
-            required
           />
+          <p>{errors.quantity?.message}</p>
         </div>
         <div className="form-group">
-          <label htmlFor="password">Price:</label>
+          <label>Price:</label>
           <input
             type="text"
             name="price"
+            {...register("price")}
             onChange={(e) => handleChange(e)}
-            required
+            value={med.price}
           />
+          <p>{errors.price?.message}</p>
         </div>
         <div className="form-group">
-          <label htmlFor="confirmPassword">Expiry Date:</label>
+          <label>Expiry Date:</label>
           <input
             type="date"
             name="expiryDate"
+            {...register("expiryDate")}
             onChange={(e) => handleChange(e)}
-            required
+            value={med.expiryDate}
+            min={formattedToday}
           />
+          <p>{errors.expiryDate?.message}</p>
         </div>
         <button type="submit" className="submit-button">
           Add Medicine

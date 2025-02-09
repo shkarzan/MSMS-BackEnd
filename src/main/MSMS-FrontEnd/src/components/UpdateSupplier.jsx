@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 
 export default function UpdateSupplier() {
-  const url = "http://localhost:8080/api/supplier";
+  const url = "/api/supplier";
   const navigate = useNavigate();
   const [supplier, setSupplier] = useState({
     id: "",
@@ -55,6 +55,7 @@ export default function UpdateSupplier() {
       .catch((err) => {
         console.log(err);
       });
+    navigate("/suppliers");
   };
 
   return (

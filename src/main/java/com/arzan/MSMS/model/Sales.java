@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class Sales {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long salesId;
     private Long subTotal;
     private Long taxRate;

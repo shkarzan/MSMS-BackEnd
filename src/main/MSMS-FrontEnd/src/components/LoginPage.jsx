@@ -10,7 +10,7 @@ const LoginPage = ({ login, setIsAdmin }) => {
     username: "",
     password: "",
   });
-  const url = "http://localhost:8080/api/user";
+  const url = "/api/user";
   const { username, password } = user;
 
   const handleLogin = async (e) => {

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../Css/Settings.css";
-import Sidebar from "./StaffSidebar.jsx";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 
 function Settings() {
-  const url = "http://localhost:8080/api/user";
+  const url = "/api/user";
   const loadUsers = async () => {
     await axios
       .get(`${url}/all`)
@@ -59,6 +58,7 @@ function Settings() {
         console.log(err);
         NotificationManager.error(err.response.data);
       });
+    setAddUserOn(!addUserOn);
   };
 
   return (

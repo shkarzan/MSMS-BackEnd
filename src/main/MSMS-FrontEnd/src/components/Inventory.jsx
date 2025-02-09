@@ -6,7 +6,7 @@ import axios from "axios";
 import { NotificationManager } from "react-notifications";
 import CommonTable from "./CommonTable";
 
-const Inventory = () => {
+const Inventory = ({ isAdmin }) => {
   const navigate = useNavigate();
   const url = "http://localhost:8080/api/medicine";
   const [meds, setMed] = useState([]);
@@ -54,7 +54,10 @@ const Inventory = () => {
         </div>
         <div className="buttons">
           <button onClick={() => navigate("/addMedicine")}>Add Medicine</button>
-          <button onClick={() => navigate("/updateMedicine")}>
+          <button
+            onClick={() => navigate("/updateMedicine")}
+            disabled={!isAdmin}
+          >
             Update Medicine
           </button>
         </div>
@@ -70,6 +73,7 @@ const Inventory = () => {
           aob={filteredMeds}
           removeFun={removeMed}
           data={"inventory"}
+          isAdmin={isAdmin}
         />
       </div>
     </div>

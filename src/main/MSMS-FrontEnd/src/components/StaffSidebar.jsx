@@ -19,11 +19,9 @@ const StaffSidebar = ({ logout, isAdmin, count }) => {
         <NavLink to="/orders" activeclassname="active">
           Orders Management
         </NavLink>
-        {isAdmin && (
-          <NavLink to="/customers" activeclassname="active">
-            Customer Management
-          </NavLink>
-        )}
+        <NavLink to="/customers" activeclassname="active">
+          Customer Management
+        </NavLink>
         {isAdmin && (
           <NavLink to="/invoices" activeclassname="active">
             Invoice Management
@@ -33,11 +31,9 @@ const StaffSidebar = ({ logout, isAdmin, count }) => {
           Add Invoice
         </NavLink>
 
-        {isAdmin && (
-          <NavLink to="/suppliers" activeclassname="active">
-            Supplier Management
-          </NavLink>
-        )}
+        <NavLink to="/suppliers" activeclassname="active">
+          Supplier Management
+        </NavLink>
         <NavLink to="/sendManualEmail" activeclassname="active">
           Send PDF Manually
         </NavLink>

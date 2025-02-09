@@ -32,6 +32,8 @@ import Suppliers from "./components/Suppliers";
 import AddSupplier from "./components/AddSupplier";
 import UpdateSupplier from "./components/UpdateSupplier";
 import Orders from "./components/Orders";
+import UpdateCustomer from "./components/UpdateCustomer";
+import UpdateOrder from "./components/UpdateOrder";
 
 function App() {
   const authenticated =
@@ -107,11 +109,21 @@ function App() {
               >
                 <Route path="/addMedicine" element={<AddMedicine />} />
                 <Route path="/addSupplier" element={<AddSupplier />} />
-                <Route path="/inventory" element={<Inventory />} />
-                <Route path="/updateMedicine" element={<UpdateMedicine />} />
+                <Route
+                  path="/inventory"
+                  element={<Inventory isAdmin={isAdmin} />}
+                />
                 <Route path="/addInvoice" element={<AddInvoice />} />
-                <Route path="/sales" element={<Sales />} />
-                <Route path="/orders" element={<Orders />} />
+                <Route path="/sales" element={<Sales isAdmin={isAdmin} />} />
+                <Route
+                  path="/customers"
+                  element={<Customers isAdmin={isAdmin} />}
+                />
+                <Route
+                  path="/suppliers"
+                  element={<Suppliers isAdmin={isAdmin} />}
+                />
+                <Route path="/orders" element={<Orders isAdmin={isAdmin} />} />
                 <Route
                   path="/sendManualEmail"
                   element={<SendEmailManually />}
@@ -137,11 +149,12 @@ function App() {
                 }
               >
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/updateMedicine" element={<UpdateMedicine />} />
+                <Route path="/updateCustomer" element={<UpdateCustomer />} />
+                <Route path="/updateSupplier" element={<UpdateSupplier />} />
+                <Route path="/updateOrder" element={<UpdateOrder />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/customers" element={<Customers />} />
-                <Route path="/suppliers" element={<Suppliers />} />
-                <Route path="/updateSupplier" element={<UpdateSupplier />} />
               </Route>
             </Route>
           </Routes>

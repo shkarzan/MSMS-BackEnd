@@ -4,14 +4,33 @@ import Sidebar from "./StaffSidebar";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 import CommonTable from "./CommonTable";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
 // import { NotificationManager } from "react-notifications";
 
-const Orders = () => {
-  const [supplierNames, setSupplierNames] = useState([]);
+const schema = yup.object({
+  medName: yup.string().required("Medicine name is required"),
+  quantity: yup
+    .number()
+    .typeError("Quantity must be a number")
+    .positive("Quantity must be a positive number")
+    .integer("Quantity must not be a decimal valyue")
+    .required("Quantity is required"),
+});
 
+const Orders = ({ isAdmin }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const [supplierNames, setSupplierNames] = useState([]);
   const loadSuppliers = async () => {
     await axios
-      .get("http://localhost:8080/api/supplier/allSupplierName")
+      .get("/api/supplier/allSupplierName")
       .then((res) => {
         setSupplierNames(res.data);
       })
@@ -19,7 +38,16 @@ const Orders = () => {
         console.log(err);
       });
   };
-  const url = "http://localhost:8080/api/orders";
+
+  const [medNames, setMedNames] = useState([]);
+
+  const loadMedNames = async () => {
+    await axios.get("/api/medicine/allMedName").then((res) => {
+      setMedNames(res.data);
+    });
+  };
+
+  const url = "/api/orders";
   const [searchTerm, setSearchTerm] = useState("");
   const [orders, setOrders] = useState([]);
   const loadOrders = async () => {
@@ -38,6 +66,7 @@ const Orders = () => {
 
   useEffect(() => {
     loadOrders();
+    loadMedNames();
     loadSuppliers();
   }, []);
 
@@ -53,17 +82,17 @@ const Orders = () => {
       .delete(`${url}/${orderId}`)
       .then((res) => {
         NotificationManager.success(res.data);
+        loadOrders();
       })
       .catch((err) => {
         console.log(err);
       });
-    loadOrders();
   };
 
-  const saveNewOrder = async (e) => {
-    e.preventDefault();
+  const saveNewOrder = async (data, event) => {
+    setAddOrderOn(false);
+    event.preventDefault();
     console.log(orderData);
-
     await axios
       .post(`${url}/add`, orderData)
       .then((res) => {
@@ -88,6 +117,28 @@ const Orders = () => {
     date: date,
   });
 
+  const changeOrderStatus = async (orderId) => {
+    await axios
+      .put(`${url}/completed/${orderId}`)
+      .then((res) => {
+        loadOrders();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const updateInventory = async (med) => {
+    await axios
+      .put("/api/medicine/updateInventory/add", med)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const orderReceived = async (orderId, medCode, quantity) => {
     medCode = [medCode];
     quantity = [quantity];
@@ -95,25 +146,13 @@ const Orders = () => {
       medCodes: medCode,
       quantities: quantity,
     };
-    await axios
-      .put(`${url}/completed/${orderId}`)
-      .then((res) => {
-        console.log(res.data);
+    changeOrderStatus(orderId);
+    updateInventory(med);
+  };
+  const navigate = useNavigate();
 
-        // NotificationManager.success(res.data);
-        loadOrders();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    await axios
-      .put("http://localhost:8080/api/medicine/updateInventory/add", med)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const toUpdateOrderComponent = (supplierNames) => {
+    navigate("/updateOrder", { state: { supplierNames: supplierNames } });
   };
 
   const filteredOrders = orders.filter((order) => {
@@ -125,7 +164,7 @@ const Orders = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by Order Date"
+          placeholder="Search by Order ID"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -134,31 +173,38 @@ const Orders = () => {
         <button onClick={() => setAddOrderOn(!addOrderOn)}>
           Add New Order
         </button>
-        <button>Update Order</button>
+        <button
+          onClick={() => toUpdateOrderComponent(supplierNames)}
+          disabled={!isAdmin}
+        >
+          Update Order
+        </button>
       </div>
       {addOrderOn && (
-        <form onSubmit={(e) => saveNewOrder(e)}>
+        <form onSubmit={handleSubmit(saveNewOrder)}>
           <label>Med Code</label>
           <input type="text" name="medCode" readOnly value="NA" />
           <label>Name : </label>
           <input
             type="text"
             name="medName"
+            {...register("medName")}
             onChange={(e) => handleOrderDataChange(e)}
           />
+          <p>{errors.medName?.message}</p>
           <label>Quantity : </label>
           <input
             type="text"
             name="quantity"
+            {...register("quantity")}
             onChange={(e) => handleOrderDataChange(e)}
           />
+          <p>{errors.quantity?.message}</p>
           Supplier Name:
           <select
             name="supplierName"
             style={{ margin: "10px", width: "200px", padding: "8px" }}
             onChange={(e) => handleOrderDataChange(e)}
-            // value={orderData.supplierName}
-            // defaultValue={"Select supplier"}
           >
             <option>Select supplier</option>
             {supplierNames.map((val, i) => (
@@ -193,6 +239,9 @@ const Orders = () => {
         removeFun={handleOrderDelete}
         data={"orders"}
         orderReceived={orderReceived}
+        medNames={medNames}
+        changeOrderStatus={changeOrderStatus}
+        isAdmin={isAdmin}
       />
     </div>
   );
