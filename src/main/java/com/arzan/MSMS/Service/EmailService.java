@@ -1,5 +1,6 @@
 package com.arzan.MSMS.Service;
 
+import com.arzan.MSMS.repository.SystemRepo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.util.ByteArrayDataSource;
@@ -15,6 +16,9 @@ import java.io.IOException;
 public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    SystemRepo systemRepo;
 
     public void sendEmailWithAttachment(String to, MultipartFile file) throws MessagingException, IOException{
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -35,6 +39,15 @@ public class EmailService {
         helper.setText("Please find your invoice attached");
         helper.setFrom("skypearzan@gmail.com");
         helper.addAttachment("Invoice.pdf",new ByteArrayDataSource(pdfFile,"application/pdf"));
+        javaMailSender.send(message);
+    }
+
+    public void sendEmailToSupplier(String to,String medName,Long quantity) throws MessagingException{
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setTo(to);
+        helper.setSubject("Medicine Order Mail");
+        helper.setText("Company Name: Wellness Forever\nPhone Number: 8657929785\nPlacing order for the following medicine:\nMedicine name : "+medName+"\nQuantity:"+quantity);
         javaMailSender.send(message);
     }
 

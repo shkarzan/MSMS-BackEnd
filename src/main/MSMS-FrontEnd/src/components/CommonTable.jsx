@@ -125,6 +125,7 @@ const CommonTable = ({
               <td>{supplier.id}</td>
               <td>{supplier.supplierName}</td>
               <td>{supplier.supplierNumber}</td>
+              <td>{supplier.supplierEmail}</td>
               <td>
                 <button
                   onClick={() => removeFun(supplier.id)}

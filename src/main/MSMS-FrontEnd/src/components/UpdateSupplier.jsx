@@ -10,7 +10,8 @@ export default function UpdateSupplier() {
   const [supplier, setSupplier] = useState({
     id: "",
     supplierName: "",
-    supplierNumber: 0,
+    supplierNumber: "",
+    supplierEmail: "",
   });
 
   const [found, setFound] = useState(false);
@@ -34,7 +35,8 @@ export default function UpdateSupplier() {
         setSupplier({
           id: 0,
           supplierName: "",
-          supplierNumber: 0,
+          supplierNumber: "",
+          supplierEmail: "",
         });
       });
   };
@@ -48,7 +50,8 @@ export default function UpdateSupplier() {
         setMedData({
           id: "",
           supplierName: "",
-          supplierNumber: 0,
+          supplierNumber: "",
+          supplierEmail: "",
         });
         setFound(false);
       })
@@ -92,6 +95,16 @@ export default function UpdateSupplier() {
             type="text"
             name="supplierNumber"
             value={supplier.supplierNumber}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Supplier Email
+          <input
+            type="text"
+            name="supplierEmail"
+            value={supplier.supplierEmail}
             onChange={handleChange}
             required
           />

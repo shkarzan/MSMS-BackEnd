@@ -1,14 +1,21 @@
 package com.arzan.MSMS.controller;
 
+import com.arzan.MSMS.Service.EmailService;
 import com.arzan.MSMS.exception.SalesNotFound.SalesNotFoundException;
 import com.arzan.MSMS.exception.SupplierNotFound.SupplierNotFoundException;
 import com.arzan.MSMS.model.Orders;
+import com.arzan.MSMS.model.Supplier;
 import com.arzan.MSMS.repository.OrdersRepo;
+import com.arzan.MSMS.repository.SupplierRepo;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -17,9 +24,33 @@ public class OrdersController {
     @Autowired
     OrdersRepo ordersRepo;
 
+    @Autowired
+    SupplierRepo supplierRepo;
+
+    @Autowired
+    private EmailService emailService;
+
+
     @PostMapping("/add")
-    Orders saveOrder(@RequestBody Orders orders){
-        return ordersRepo.save(orders);
+    ResponseEntity<String> saveOrder(@RequestBody Orders orders){
+        try{
+            Optional<Supplier> supplier = supplierRepo.findBySupplierName(orders.getSupplierName());
+            if(supplier.isPresent()){
+                String supplierEmail = supplier.get().getSupplierEmail();
+                emailService.sendEmailToSupplier(supplierEmail,orders.getMedName(),orders.getQuantity());
+                ordersRepo.save(orders);
+                return ResponseEntity.ok("Order Added Successfully");
+            }
+            else{
+                return ResponseEntity.status(500).body("Supplier Email not found");
+            }
+        }
+        catch (MessagingException e){
+            return ResponseEntity.status(500).body("Failed to send order to supplier");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     @GetMapping("/all")

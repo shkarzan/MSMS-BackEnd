@@ -12,11 +12,13 @@ public class Supplier {
     private Long id;
     private String supplierName;
     private String supplierNumber;
+    private String supplierEmail;
 
-    public Supplier(Long id, String supplierName, String supplierNumber) {
+    public Supplier(Long id, String supplierName, String supplierNumber,String supplierEmail) {
         this.id = id;
         this.supplierName = supplierName;
         this.supplierNumber = supplierNumber;
+        this.supplierEmail = supplierEmail;
     }
     public Supplier(){}
 
@@ -42,5 +44,13 @@ public class Supplier {
 
     public void setSupplierNumber(String supplierNumber) {
         this.supplierNumber = supplierNumber;
+    }
+
+    public String getSupplierEmail() {
+        return supplierEmail;
+    }
+
+    public void setSupplierEmail(String supplierEmail) {
+        this.supplierEmail = supplierEmail;
     }
 }

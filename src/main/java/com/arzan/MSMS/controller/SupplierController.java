@@ -36,6 +36,7 @@ public class SupplierController {
             return supplierRepo.findById(id).map(val ->{
                 val.setSupplierName(supplier.getSupplierName());
                 val.setSupplierNumber(supplier.getSupplierNumber());
+                val.setSupplierEmail(supplier.getSupplierEmail());
                 return supplierRepo.save(val);
             }).orElseThrow(()-> new SupplierNotFoundException(id));
     }

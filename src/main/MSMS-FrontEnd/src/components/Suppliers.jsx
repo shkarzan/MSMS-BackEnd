@@ -66,6 +66,7 @@ const Suppliers = ({ isAdmin }) => {
             "Supplier ID",
             "Supplier Name",
             "Supplier Number",
+            "Supplier Email",
             "Action",
           ]}
           aob={filteredSuppliers}
