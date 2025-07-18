@@ -10,10 +10,8 @@ import com.arzan.MSMS.repository.SupplierRepo;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +42,6 @@ public class OrdersController {
             else{
                 return ResponseEntity.status(500).body("Supplier Email not found");
             }
-        }
-        catch (MessagingException e){
-            return ResponseEntity.status(500).body("Failed to send order to supplier");
         }
         catch (Exception e){
             return ResponseEntity.status(500).body(e.getMessage());
@@ -82,10 +77,24 @@ public class OrdersController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<String> deleteOrder(@PathVariable Long id){
+    ResponseEntity<String> deleteOrder(@PathVariable Long id) throws MessagingException {
         if(ordersRepo.existsById(id)){
-            ordersRepo.deleteById(id);
-            return ResponseEntity.ok("Order with id:"+id+" deleted successfully");
+            Optional<Orders> order = ordersRepo.findById(id);
+            if(order.isPresent()) {
+                String status = order.get().getStatus();
+                if (status.equals("Completed") || status.equals("Cancelled")) {
+                    ordersRepo.deleteById(id);
+                    return ResponseEntity.ok("Order with id:" + id + " deleted successfully");
+                } else if(status.equals("Pending")){
+                    Optional<Supplier> supplier = supplierRepo.findBySupplierName(order.get().getSupplierName());
+                    if(supplier.isPresent()){
+                        emailService.sendCancelEmailToSupplier(order.get(),supplier.get().getSupplierEmail());
+                        order.get().setStatus("Cancelled");
+                        ordersRepo.save(order.get());
+                    }
+                    return ResponseEntity.ok("Order cancelled");
+                }
+            }
         }
         return ResponseEntity.notFound().build();
     }

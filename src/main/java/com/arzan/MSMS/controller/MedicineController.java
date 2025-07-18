@@ -5,6 +5,7 @@ import com.arzan.MSMS.model.InventoryUpdate;
 import com.arzan.MSMS.model.Medicine;
 import com.arzan.MSMS.repository.MedicineRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.arzan.MSMS.exception.MedicineNotFound.MedNotFoundException;
@@ -29,8 +30,12 @@ public class MedicineController {
     }
 
     @PostMapping("/add")
-    Medicine addMed(@RequestBody Medicine inventory) {
-        return inventoryRepo.save(inventory);
+    ResponseEntity<String> addMed(@RequestBody Medicine inventory) {
+        if(inventoryRepo.existsById(inventory.getMedCode())){
+            return ResponseEntity.status(404).body("Medicine with code "+inventory.getMedCode()+" already exist");
+        }
+        inventoryRepo.save(inventory);
+        return ResponseEntity.ok("Medicine added Successfully");
     }
 
     @PutMapping("/update/{medCode}")

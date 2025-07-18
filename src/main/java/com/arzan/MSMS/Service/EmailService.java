@@ -1,5 +1,6 @@
 package com.arzan.MSMS.Service;
 
+import com.arzan.MSMS.model.Orders;
 import com.arzan.MSMS.repository.SystemRepo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -47,7 +48,18 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setTo(to);
         helper.setSubject("Medicine Order Mail");
-        helper.setText("Company Name: Wellness Forever\nPhone Number: 8657929785\nPlacing order for the following medicine:\nMedicine name : "+medName+"\nQuantity:"+quantity);
+        String htmlText = "<h1>Company Name: Wellness Forever | Phone Number: 8657929785 | Placing order for the following medicine: 1.Medicine name : "+medName+" | 2.Quantity:"+quantity+"</h1>";
+        helper.setText(htmlText,true);
+        javaMailSender.send(message);
+    }
+
+    public void sendCancelEmailToSupplier(Orders order,String to) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setTo(to);
+        helper.setSubject("Medicine Order Cancel Email");
+        String htmlText = "<h1>This email is to cancel the order placed for the Medicine :"+order.getMedName()+" and Quantity:"+order.getQuantity()+"</h1>";
+        helper.setText(htmlText,true);
         javaMailSender.send(message);
     }
 
