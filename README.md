@@ -1,11 +1,17 @@
 # Add this to your application.properties
 
 spring.application.name=MedicalStoreManagementSystem
+
 spring.jpa.hibernate.ddl-auto = update
+
 spring.datasource.url = jdbc:mysql://localhost:3306/your_database_name
+
 spring.datasource.username = your_database_username
+
 spring.datasource.password = your_database_pass
+
 spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
+
 # For Gmail
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
